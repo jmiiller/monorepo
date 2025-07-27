@@ -1,9 +1,9 @@
 resource "aws_s3_bucket" "tf_state" {
-  bucket = "${terraform.workspace}-tf-state"
+  bucket = "${var.environment}-tf-state"
 
   tags = {
-    Name        = "${terraform.workspace}-tf-state"
-    Environment = terraform.workspace
+    Name        = "${var.environment}-tf-state"
+    Environment = var.environment
   }
 }
 
