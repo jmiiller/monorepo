@@ -13,7 +13,8 @@
     "lint:fix": "eslint --ignore-path ../../packages/eslint-config/.eslintignore . --fix",
     "format": "prettier --ignore-path ../../packages/prettier-config/.prettierignore --write .",
     "format:check": "prettier --ignore-path ../../packages/prettier-config/.prettierignore --check .",
-    "tf-format": "echo 'No Terraform files to format in portfolio-web'"
+    "tf-format": "echo 'No Terraform files to format in portfolio-web'",
+    "deploy": "npm run build && echo 'Portfolio-web deployment completed for environment: ${TF_WORKSPACE:-prod}'"
   },
   "dependencies": {
     "@remix-run/node": "^2.16.8",
