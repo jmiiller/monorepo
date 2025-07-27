@@ -5,9 +5,14 @@ set -euo pipefail
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR"
 
-WORKSPACE=$(terraform workspace show 2>/dev/null || echo "default")
+echo "Deploying for environment: $ENVIRONMENT"
 
-ENV_FILE="environments/${WORKSPACE}.tfvars"
+# Initialize Terraform
+echo "Initializing Terraform..."
+terraform init
+
+# Set up environment file
+ENV_FILE="env/${ENVIRONMENT}.tfvars"
 if [[ -f "$ENV_FILE" ]]; then
     echo "Using environment file: $ENV_FILE"
     VAR_FILE_ARG="-var-file=$ENV_FILE"
@@ -16,10 +21,6 @@ else
     exit 1
 fi
 
-# Initialize Terraform
-echo "Initializing Terraform..."
-terraform init
-
 # Apply configuration
-echo "Applying Terraform configuration for workspace: $WORKSPACE"
+echo "Applying Terraform configuration for environment: $ENVIRONMENT"
 terraform apply -auto-approve $VAR_FILE_ARG

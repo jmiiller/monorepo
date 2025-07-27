@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "tf_locks" {
-  name         = "${terraform.workspace}-tf-state"
+  name         = "${var.environment}-tf-state-lock"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
@@ -9,8 +9,8 @@ resource "aws_dynamodb_table" "tf_locks" {
   }
 
   tags = {
-    Name        = "${terraform.workspace}-tf-state"
-    Environment = terraform.workspace
+    Name        = "${var.environment}-tf-state-lock"
+    Environment = var.environment
   }
 }
 
