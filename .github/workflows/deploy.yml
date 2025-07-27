@@ -1,0 +1,75 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'Specific app to deploy (leave blank for all)'
+        required: false
+        type: string
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      apps-to-deploy: ${{ steps.generate-matrix.outputs.apps-to-deploy }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Generate deployment matrix
+        id: generate-matrix
+        run: |
+          if [ -n "${{ github.event.inputs.app }}" ]; then
+            echo "apps-to-deploy=[\"${{ github.event.inputs.app }}\"]" >> $GITHUB_OUTPUT
+          else
+            apps=$(ls apps | jq -R -s -c 'split("\n")[:-1]')
+            echo "apps-to-deploy=$apps" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: setup
+    if: needs.setup.outputs.apps-to-deploy != '[]'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    
+    strategy:
+      matrix:
+        app: ${{ fromJson(needs.setup.outputs.apps-to-deploy) }}
+      fail-fast: false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.12.2"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: GitHubActions-Deploy-${{ matrix.app }}
+
+      - name: Build and Deploy ${{ matrix.app }}
+        run: pnpm turbo deploy --filter=${{ matrix.app }}
