@@ -5,6 +5,14 @@ set -euo pipefail
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR"
 
+# Check if ENVIRONMENT is set
+if [[ -z "${ENVIRONMENT:-}" ]]; then
+    echo "Error: ENVIRONMENT variable is not set"
+    echo "Available environment variables:"
+    env | grep -E '^(ENVIRONMENT|TF_|AWS_)' || echo "No relevant env vars found"
+    exit 1
+fi
+
 echo "Deploying for environment: $ENVIRONMENT"
 
 # Initialize Terraform
