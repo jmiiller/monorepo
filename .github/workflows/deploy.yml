@@ -71,10 +71,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
           role-session-name: GitHubActions-${{ github.run_id }}-${{ strategy.job-index }}
 
-      - name: Set environment for deployment
-        run: |
-          # Use ENVIRONMENT from GitHub environment variable
-          echo "ENVIRONMENT=${{ vars.ENVIRONMENT }}" >> $GITHUB_ENV
-
-      - name: Build and Deploy ${{ matrix.app }}
+      - name: Deploy ${{ matrix.app }}
+        env:
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
         run: pnpm turbo deploy --filter=${{ matrix.app }}
