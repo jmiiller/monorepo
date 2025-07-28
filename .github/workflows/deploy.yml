@@ -71,6 +71,14 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
           role-session-name: GitHubActions-${{ github.run_id }}-${{ strategy.job-index }}
 
+      - name: Debug environment
+        env:
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+        run: |
+          echo "DEBUG: ENVIRONMENT in step = ${ENVIRONMENT:-NOT_SET}"
+          echo "DEBUG: All env vars:"
+          env | grep ENVIRONMENT || echo "No ENVIRONMENT vars found"
+      
       - name: Deploy ${{ matrix.app }}
         env:
           ENVIRONMENT: ${{ vars.ENVIRONMENT }}
