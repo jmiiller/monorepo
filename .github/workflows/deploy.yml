@@ -75,6 +75,15 @@ jobs:
       - name: Validate IAM Role Access
         run: aws sts get-caller-identity
       
+      - name: Debug AWS environment
+        run: |
+          echo "AWS_REGION: $AWS_REGION"
+          echo "AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
+          echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:+[SET]}"
+          echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:+[SET]}"
+          echo "AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:+[SET]}"
+          aws configure list
+
       - name: Deploy ${{ matrix.app }}
         env:
           ENVIRONMENT: ${{ vars.ENVIRONMENT }}
