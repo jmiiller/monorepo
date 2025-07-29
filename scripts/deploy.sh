@@ -29,7 +29,7 @@ fi
 echo "Current workspace: $(terraform workspace show)"
 
 # Set up environment file
-ENV_FILE="env/${ENVIRONMENT}.tfvars"
+ENV_FILE="env/$WORKSPACE}.tfvars"
 if [[ -f "$ENV_FILE" ]]; then
     echo "Using environment file: $ENV_FILE"
     VAR_FILE_ARG="-var-file=$ENV_FILE"
