@@ -86,5 +86,5 @@ jobs:
 
       - name: Deploy ${{ matrix.app }}
         env:
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          TERRAFORM_WORKSPACE: ${{ vars.TERRAFORM_WORKSPACE }}
         run: pnpm run deploy --filter=${{ matrix.app }}
