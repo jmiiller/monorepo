@@ -71,12 +71,10 @@ jobs:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
           role-session-name: GitHubActions-${{ github.run_id }}-${{ strategy.job-index }}
+
+      - name: Validate IAM Role Access
+        run: aws sts get-caller-identity
       
-      - name: Verify Terraform installation
-        run: |
-          which terraform
-          terraform version
-          
       - name: Deploy ${{ matrix.app }}
         env:
           ENVIRONMENT: ${{ vars.ENVIRONMENT }}
