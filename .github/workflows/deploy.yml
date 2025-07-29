@@ -71,6 +71,11 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
           role-session-name: GitHubActions-${{ github.run_id }}-${{ strategy.job-index }}
       
+      - name: Verify Terraform installation
+        run: |
+          which terraform
+          terraform version
+          
       - name: Deploy ${{ matrix.app }}
         env:
           ENVIRONMENT: ${{ vars.ENVIRONMENT }}
