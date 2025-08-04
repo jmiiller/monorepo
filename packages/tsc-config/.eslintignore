@@ -1,8 +1,0 @@
-node_modules
-.cache
-build
-.env
-.turbo
-*.config.js
-*.config.ts
-public
