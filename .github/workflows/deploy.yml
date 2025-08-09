@@ -87,4 +87,6 @@ jobs:
       - name: Deploy ${{ matrix.app }}
         env:
           TERRAFORM_WORKSPACE: ${{ vars.TERRAFORM_WORKSPACE }}
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
         run: pnpm run deploy --filter=${{ matrix.app }}

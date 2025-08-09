@@ -26,4 +26,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build application
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
         run: pnpm run build
