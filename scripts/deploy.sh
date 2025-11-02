@@ -18,7 +18,7 @@ terraform init
 echo "Available workspaces:"
 terraform workspace list
 
-terraform -chdir=terraform workspace select -or-create ${WORKSPACE}
+terraform workspace select -or-create ${WORKSPACE}
 
 echo "Current workspace: $(terraform workspace show)"
 
