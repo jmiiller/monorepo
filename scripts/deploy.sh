@@ -10,17 +10,15 @@ echo "Workspace: $WORKSPACE"
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 echo "AWS Account ID: $ACCOUNT_ID"
 
-echo "Available workspaces:"
-terraform workspace list
-
-if terraform workspace list | grep -q "  $WORKSPACE$"; then
-    echo "Selecting existing workspace: $WORKSPACE"
-    terraform workspace select $WORKSPACE
-fi
 
 echo "Initializing Terraform..."
 cd terraform
 terraform init
+
+echo "Available workspaces:"
+terraform workspace list
+
+terraform -chdir=terraform workspace select -or-create ${WORKSPACE}
 
 echo "Current workspace: $(terraform workspace show)"
 
